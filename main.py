@@ -3,6 +3,7 @@ import enigma
 import time
 import itertools
 
+
 #ABCDEFGHIJKLMNOPQRSTUVWXYZ - A
 #EKMFLGDQVZNTOWYHXUSPAIBRCJ - I
 #AJDKSIRUXBLHWTMCQGZNPYFVOE - II
@@ -72,9 +73,13 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
         character = lowerplugboard[lowerplugboard.find(i) + 1:lowerplugboard.find(i) + 2]
       elif ' ' in lowerplugboard[lowerplugboard.find(i):lowerplugboard.find(i) + 2]:
         character = lowerplugboard[lowerplugboard.find(i) - 1:lowerplugboard.find(i)]
-    #print(character)
+    print(character)
     
     # going through rotors
+    
+
+    
+    '''
     character = shiftedSecondRotor[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
     character = shiftedThirdRotor[shiftedSecondRotor.find(character):shiftedSecondRotor.find(character) + 1]
     character = lowerReflector[shiftedThirdRotor.find(character):shiftedThirdRotor.find(character) + 1]
@@ -82,13 +87,13 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
     character = shiftedSecondRotor[shiftedThirdRotor.find(character):shiftedThirdRotor.find(character) + 1]
     character = shiftedFirstRotor[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
     print(character)
-    
+    '''
   
   text = ''
   return text
 
 enigma('AAAAA', ' AB CD ', rotorOne, rotorTwo, rotorThree, 'A A A', '1 2 1', UKWC)
-  
+ 
 for i in alphabet:
   if i not in plugboard_settings:
     letters = letters + i
