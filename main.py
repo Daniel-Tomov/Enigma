@@ -1,13 +1,11 @@
-from enigma.machine import EnigmaMachine
-import enigma
 import time
 import itertools
 
-#ABCDEFGHIJKLMNOPQRSTUVWXYZ - A
+#ABCDEFGHIJKLMNOPQRSTUVWXYZ - Alphabet
 #EKMFLGDQVZNTOWYHXUSPAIBRCJ - I
 #AJDKSIRUXBLHWTMCQGZNPYFVOE - II
 #BDFHJLCPRTXVZNYEIWGAKMUSQO - III
-#FVPJIAOYEDRZXWGCTKUQSBNMHL - R
+#FVPJIAOYEDRZXWGCTKUQSBNMHL - Reflector
 #BDFHJLCPRTXVZNYEIWGAKMUSQO - III
 #AJDKSIRUXBLHWTMCQGZNPYFVOE - II
 #EKMFLGDQVZNTOWYHXUSPAIBRCJ - I
@@ -18,7 +16,7 @@ import itertools
 
 ciphertext = 'VVIUASDV'
 rotor = ['I', 'III', 'V']
-alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"# input in capital format
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".lower() # input in capital format
 reflector = 'C'
 UKWC = 'FVPJIAOYEDRZXWGCTKUQSBNMHL' # input in capital format
 rotorOne = 'EKMFLGDQVZNTOWYHXUSPAIBRCJ' # input in capital format
@@ -27,7 +25,7 @@ rotorThree = 'BDFHJLCPRTXVZNYEIWGAKMUSQO' # input in capital format
 rotorFour = 'ESOVPZJAYQUIRHXLNFTGKDCMWB' # input in capital format
 rotorFive = 'VZBRGITYUPSDNHLXAWMJQOFECK' # input in capital format
 ring_settings = '7 25 1' # input in # # # format
-windowLetters = '1 23 8' # input in # # # capital format
+windowLetters = '1 23 8' # input in # # # format
 plugboard_settings = 'AC BI SR LM'
 new_plugboard_settings = plugboard_settings
 letters = ''
@@ -36,11 +34,13 @@ newLetters = []
 #Extract unused letters
 
 def rotate_rotor(rotor):
+  print(rotor)
   rotor = rotor[1:26] + rotor[0:1]
   print(rotor)
   return rotor
 
 def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLetters, ringSettings, reflector):
+  global alphabet
   lowerCipher = ciphertext.lower()
   lowerplugboard = plugboard.lower()
   lowerReflector = reflector.lower()
@@ -52,21 +52,28 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
   #print(shiftedFirstRotor)
   #print(shiftedSecondRotor)
   #print(shiftedThirdRotor)
-
+  '''
+  shiftedFirstRotor = rotate_rotor(shiftedFirstRotor)
+  if shiftedFirstRotor[0:1] == 'Q':
+    shiftedSecondRotor = rotate_rotor(shiftedSecondRotor)
+  if shiftedSecondRotor[0:1] == 'E':
+   shiftedThirdRotor = rotate_rotor(shiftedThirdRotor)
+'''
   #shift rotors according to window letters
   indivWindowLetters = windowLetters.split(' ')
-  print(indivWindowLetters)
-  shiftedFirstRotor = (shiftedFirstRotor[(int(shiftedFirstRotor.find(indivWindowLetters[0]))):26] + shiftedFirstRotor[0:int(shiftedFirstRotor.find(indivWindowLetters[0]))]).lower()
-  shiftedSecondRotor = (shiftedSecondRotor[(int(shiftedSecondRotor.find(indivWindowLetters[1]))):26] + shiftedSecondRotor[0:(int(shiftedSecondRotor.find(indivWindowLetters[1])))]).lower()
-  shiftedThirdRotor = (shiftedThirdRotor[(int(shiftedThirdRotor.find(indivWindowLetters[2]))):26] + shiftedThirdRotor[0:(int(shiftedThirdRotor.find(indivWindowLetters[2])))]).lower()
-  #print(shiftedFirstRotor)
-  #print(shiftedSecondRotor)
-  #print(shiftedThirdRotor)
+  #print(indivWindowLetters)
+  shiftedFirstRotor = (shiftedFirstRotor[(int(alphabet.find(indivWindowLetters[0]))):26] + shiftedFirstRotor[0:int(alphabet.find(indivWindowLetters[0]))]).lower()
+  shiftedSecondRotor = (shiftedSecondRotor[(int(alphabet.find(indivWindowLetters[1]))):26] + shiftedSecondRotor[0:(int(alphabet.find(indivWindowLetters[1])))]).lower()
+  shiftedThirdRotor = (shiftedThirdRotor[(int(alphabet.find(indivWindowLetters[2]))):26] + shiftedThirdRotor[0:(int(alphabet.find(indivWindowLetters[2])))]).lower()
+  print(shiftedFirstRotor)
+  print(shiftedSecondRotor)
+  print(shiftedThirdRotor)
   
   #crack each letter
 
   # plugboard settings
   for i in lowerCipher:
+    character = i
     if i in lowerplugboard:
       if ' ' in lowerplugboard[lowerplugboard.find(i) - 1:lowerplugboard.find(i)]:
         character = lowerplugboard[lowerplugboard.find(i) + 1:lowerplugboard.find(i) + 2]
@@ -75,20 +82,29 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
     #print(character)
     
     # going through rotors
-    character = shiftedSecondRotor[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
-    character = shiftedThirdRotor[shiftedSecondRotor.find(character):shiftedSecondRotor.find(character) + 1]
-    character = lowerReflector[shiftedThirdRotor.find(character):shiftedThirdRotor.find(character) + 1]
-    character = shiftedThirdRotor[lowerReflector.find(character):lowerReflector.find(character) + 1]
-    character = shiftedSecondRotor[shiftedThirdRotor.find(character):shiftedThirdRotor.find(character) + 1]
-    character = shiftedFirstRotor[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
+    
+    character = shiftedFirstRotor[alphabet.find(character):alphabet.find(character) + 1]
+    print(character)
+    character = shiftedSecondRotor[alphabet.find(character):alphabet.find(character) + 1]
+    print(character)
+    character = shiftedThirdRotor[alphabet.find(character):alphabet.find(character) + 1]
+    print(character)
+    character = lowerReflector[alphabet.find(character):alphabet.find(character) + 1]
+    print(character)
+    character = alphabet[shiftedThirdRotor.find(character):shiftedThirdRotor.find(character) + 1]
+    print(character)
+    character = alphabet[shiftedSecondRotor.find(character):shiftedSecondRotor.find(character) + 1]
+    print(character)
+    character = alphabet[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
     print(character)
     
   
   text = ''
   return text
 
-enigma('AAAAA', ' AB CD ', rotorOne, rotorTwo, rotorThree, 'A A A', '1 2 1', UKWC)
-  
+enigma('A', '', rotorOne, rotorOne, rotorOne, 'A A A'.lower(), '1 1 1', UKWC)
+
+exit(0)
 for i in alphabet:
   if i not in plugboard_settings:
     letters = letters + i
@@ -123,10 +139,3 @@ for i in newLetters:
 print("Using the plugboard: ")
 print(new_plugboard_settings)
   
-try:
-  machine = EnigmaMachine.from_key_sheet(rotors=rotor, reflector=reflector, ring_settings=ring_settings, plugboard_settings=new_plugboard_settings)
-  machine.set_display('RUH')
-  plaintext = machine.process_text(ciphertext)
-  print(plaintext)
-except enigma.plugboard.PlugboardError:
-  print('ERROR: You have input more than 10 plugboard settings')
