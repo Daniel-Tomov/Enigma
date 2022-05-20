@@ -2,6 +2,8 @@ import time
 import itertools
 
 #ABCDEFGHIJKLMNOPQRSTUVWXYZ - Alphabet
+
+#ABCDEFGHIJKLMNOPQRSTUVWXYZ - A
 #EKMFLGDQVZNTOWYHXUSPAIBRCJ - I
 #AJDKSIRUXBLHWTMCQGZNPYFVOE - II
 #BDFHJLCPRTXVZNYEIWGAKMUSQO - III
@@ -79,7 +81,7 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
         character = lowerplugboard[lowerplugboard.find(i) + 1:lowerplugboard.find(i) + 2]
       elif ' ' in lowerplugboard[lowerplugboard.find(i):lowerplugboard.find(i) + 2]:
         character = lowerplugboard[lowerplugboard.find(i) - 1:lowerplugboard.find(i)]
-    #print(character)
+    print(character)
     
     # going through rotors
     
@@ -96,8 +98,17 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
     character = alphabet[shiftedSecondRotor.find(character):shiftedSecondRotor.find(character) + 1]
     print(character)
     character = alphabet[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
-    print(character)
+
     
+    '''
+    character = shiftedSecondRotor[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
+    character = shiftedThirdRotor[shiftedSecondRotor.find(character):shiftedSecondRotor.find(character) + 1]
+    character = lowerReflector[shiftedThirdRotor.find(character):shiftedThirdRotor.find(character) + 1]
+    character = shiftedThirdRotor[lowerReflector.find(character):lowerReflector.find(character) + 1]
+    character = shiftedSecondRotor[shiftedThirdRotor.find(character):shiftedThirdRotor.find(character) + 1]
+    character = shiftedFirstRotor[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
+    print(character)
+    '''
   
   text = ''
   return text
@@ -105,6 +116,8 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
 enigma('A', '', rotorOne, rotorOne, rotorOne, 'A A A'.lower(), '1 1 1', UKWC)
 
 exit(0)
+#enigma('AAAAA', ' AB CD ', rotorOne, rotorTwo, rotorThree, 'A A A', '1 2 1', UKWC)
+ 
 for i in alphabet:
   if i not in plugboard_settings:
     letters = letters + i
