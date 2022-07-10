@@ -1,9 +1,38 @@
 import time
+from enigma.machine import EnigmaMachine
+from enigma.rotors.rotor import Rotor
 import itertools
+'''
+ro = Rotor("I", "EKMFLGDQVZNTOWYHXUSPAIBRCJ", ring_setting=0, stepping=None)
+print(ro.signal_in(0))
+ro.rotate()
+print(ro.signal_in(0))
 
+machine = EnigmaMachine.from_key_sheet(
+       rotors='I I I',
+       reflector='C',
+       ring_settings='26 26 26',
+       plugboard_settings='')
+
+machine.set_display('AAA')
+print(machine.get_display())
+
+print(machine.process_text('AA'))
+'''
 #ABCDEFGHIJKLMNOPQRSTUVWXYZ - Alphabet
 
 #ABCDEFGHIJKLMNOPQRSTUVWXYZ - A
+#KMFLGDQVZNTOWYHXUSPAIBRCJE - Three
+#EKMFLGDQVZNTOWYHXUSPAIBRCJ - Two
+#EKMFLGDQVZNTOWYHXUSPAIBRCJ - One
+#FVPJIAOYEDRZXWGCTKUQSBNMHL - Reflector
+#EKMFLGDQVZNTOWYHXUSPAIBRCJ - One
+#EKMFLGDQVZNTOWYHXUSPAIBRCJ - Two
+#KMFLGDQVZNTOWYHXUSPAIBRCJE - Three
+#ABCDEFGHIJKLMNOPQRSTUVWXYZ - A
+
+#ABCDEFGHIJKLMNOPQRSTUVWXYZ - A
+#KMFLGDQVZNTOWYHXUSPAIBRCJE
 #EKMFLGDQVZNTOWYHXUSPAIBRCJ - I
 #AJDKSIRUXBLHWTMCQGZNPYFVOE - II
 #BDFHJLCPRTXVZNYEIWGAKMUSQO - III
@@ -45,7 +74,11 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
   global alphabet
   lowerCipher = ciphertext.lower()
   lowerplugboard = plugboard.lower()
-  lowerReflector = reflector.lower()
+  firstRotor = list(firstRotor.lower())
+  secondRotor = list(secondRotor.lower())
+  thirdRotor = list(thirdRotor.lower())
+  reflector = list(reflector.lower())
+
   
   indivRingSettings = ringSettings.split(' ')
   shiftedFirstRotor = firstRotor[(int(indivRingSettings[0]) - 1):26] + firstRotor[0:int(indivRingSettings[0]) - 1]
@@ -64,9 +97,9 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
   #shift rotors according to window letters
   indivWindowLetters = windowLetters.split(' ')
   #print(indivWindowLetters)
-  shiftedFirstRotor = (shiftedFirstRotor[(int(alphabet.find(indivWindowLetters[0]))):26] + shiftedFirstRotor[0:int(alphabet.find(indivWindowLetters[0]))]).lower()
-  shiftedSecondRotor = (shiftedSecondRotor[(int(alphabet.find(indivWindowLetters[1]))):26] + shiftedSecondRotor[0:(int(alphabet.find(indivWindowLetters[1])))]).lower()
-  shiftedThirdRotor = (shiftedThirdRotor[(int(alphabet.find(indivWindowLetters[2]))):26] + shiftedThirdRotor[0:(int(alphabet.find(indivWindowLetters[2])))]).lower()
+  shiftedFirstRotor = (shiftedFirstRotor[(int(alphabet.find(indivWindowLetters[0]))):26] + shiftedFirstRotor[0:int(alphabet.find(indivWindowLetters[0]))])
+  shiftedSecondRotor = (shiftedSecondRotor[(int(alphabet.find(indivWindowLetters[1]))):26] + shiftedSecondRotor[0:(int(alphabet.find(indivWindowLetters[1])))])
+  shiftedThirdRotor = (shiftedThirdRotor[(int(alphabet.find(indivWindowLetters[2]))):26] + shiftedThirdRotor[0:(int(alphabet.find(indivWindowLetters[2])))])
   print(shiftedFirstRotor)
   print(shiftedSecondRotor)
   print(shiftedThirdRotor)
@@ -91,14 +124,14 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
     print(character)
     character = shiftedThirdRotor[alphabet.find(character):alphabet.find(character) + 1]
     print(character)
-    character = lowerReflector[alphabet.find(character):alphabet.find(character) + 1]
+    character = reflector[alphabet.find(character):alphabet.find(character) + 1]
     print(character)
     character = alphabet[shiftedThirdRotor.find(character):shiftedThirdRotor.find(character) + 1]
     print(character)
     character = alphabet[shiftedSecondRotor.find(character):shiftedSecondRotor.find(character) + 1]
     print(character)
     character = alphabet[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
-
+    print(character)
     
     '''
     character = shiftedSecondRotor[shiftedFirstRotor.find(character):shiftedFirstRotor.find(character) + 1]
@@ -113,7 +146,9 @@ def enigma(ciphertext, plugboard, firstRotor, secondRotor, thirdRotor, windowLet
   text = ''
   return text
 
-enigma('A', '', rotorOne, rotorOne, rotorOne, 'A A A'.lower(), '1 1 1', UKWC)
+
+
+enigma('A', '', "KMFLGDQVZNTOWYHXUSPAIBRCJE", rotorOne, rotorOne, 'A A A'.lower(), '1 1 1', UKWC)
 
 exit(0)
 #enigma('AAAAA', ' AB CD ', rotorOne, rotorTwo, rotorThree, 'A A A', '1 2 1', UKWC)
